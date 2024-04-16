@@ -1,0 +1,64 @@
+question,golden_query,capybarahermes_generated_query,golden_tokens,capybarahermes_tokens
+Retrieve the total number of employees.,SELECT COUNT(*) FROM Salaries;,"
+SELECT COUNT(Id) FROM Salaries;","['SELECT', 'COUNT', '(', '*', ')', 'FROM', 'Salaries', ';']","['SELECT', 'COUNT', '(', 'Id', ')', 'FROM', 'Salaries', ';']"
+Retrieve the employee with the highest total pay.,SELECT * FROM Salaries ORDER BY TotalPay DESC LIMIT 1;,"
+SELECT EmployeeName, MAX(TotalPay) as Highest_Total_Pay
+FROM Salaries
+GROUP BY EmployeeName
+ORDER BY Highest_Total_Pay DESC
+LIMIT 1;","['SELECT', '*', 'FROM', 'Salaries', 'ORDER', 'BY', 'TotalPay', 'DESC', 'LIMIT', '1', ';']","['SELECT', 'EmployeeName', ',', 'MAX', '(', 'TotalPay', ')', 'as', 'Highest_Total_Pay', 'FROM', 'Salaries', 'GROUP', 'BY', 'EmployeeName', 'ORDER', 'BY', 'Highest_Total_Pay', 'DESC', 'LIMIT', '1', ';']"
+Retrieve the average base pay for all employees.,SELECT AVG(BasePay) AS AverageBasePay FROM Salaries;,"
+SELECT AVG(BasePay) FROM Salaries;","['SELECT', 'AVG', '(', 'BasePay', ')', 'AS', 'AverageBasePay', 'FROM', 'Salaries', ';']","['SELECT', 'AVG', '(', 'BasePay', ')', 'FROM', 'Salaries', ';']"
+Retrieve the top 10 highest paid employees.,SELECT * FROM Salaries ORDER BY TotalPay DESC LIMIT 10;,"
+SELECT TOP 10 EmployeeName, TotalPayBenefits FROM Salaries ORDER BY TotalPayBenefits DESC;","['SELECT', '*', 'FROM', 'Salaries', 'ORDER', 'BY', 'TotalPay', 'DESC', 'LIMIT', '10', ';']","['SELECT', 'TOP', '10', 'EmployeeName', ',', 'TotalPayBenefits', 'FROM', 'Salaries', 'ORDER', 'BY', 'TotalPayBenefits', 'DESC', ';']"
+Retrieve the total pay for employees with a job title of 'CAPTAIN III (POLICE DEPARTMENT)'.,SELECT SUM(TotalPay) FROM Salaries WHERE JobTitle = 'CAPTAIN III (POLICE DEPARTMENT)';,"
+SELECT SUM(BasePay + OvertimePay + OtherPay) AS TotalPay 
+FROM Salaries 
+WHERE JobTitle = 'CAPTAIN III (POLICE DEPARTMENT)'","['SELECT', 'SUM', '(', 'TotalPay', ')', 'FROM', 'Salaries', 'WHERE', 'JobTitle', '=', ""'"", 'CAPTAIN', 'III', '(', 'POLICE', 'DEPARTMENT', ')', ""'"", ';']","['SELECT', 'SUM', '(', 'BasePay', '+', 'OvertimePay', '+', 'OtherPay', ')', 'AS', 'TotalPay', 'FROM', 'Salaries', 'WHERE', 'JobTitle', '=', ""'"", 'CAPTAIN', 'III', '(', 'POLICE', 'DEPARTMENT', ')', ""'""]"
+Retrieve the employee with the highest overtime pay.,SELECT * FROM Salaries ORDER BY OvertimePay DESC LIMIT 1;,"
+SELECT EmployeeName, Max(OvertimePay) as OvertimePay
+FROM Salaries
+GROUP BY EmployeeName
+ORDER BY OvertimePay DESC
+LIMIT 1;","['SELECT', '*', 'FROM', 'Salaries', 'ORDER', 'BY', 'OvertimePay', 'DESC', 'LIMIT', '1', ';']","['SELECT', 'EmployeeName', ',', 'Max', '(', 'OvertimePay', ')', 'as', 'OvertimePay', 'FROM', 'Salaries', 'GROUP', 'BY', 'EmployeeName', 'ORDER', 'BY', 'OvertimePay', 'DESC', 'LIMIT', '1', ';']"
+Retrieve the total number of employees who have a year equal to 2011.,SELECT COUNT(*) FROM Salaries WHERE Year = 2011;,"
+SELECT COUNT(Id) FROM Salaries WHERE Year = 2011;","['SELECT', 'COUNT', '(', '*', ')', 'FROM', 'Salaries', 'WHERE', 'Year', '=', '2011', ';']","['SELECT', 'COUNT', '(', 'Id', ')', 'FROM', 'Salaries', 'WHERE', 'Year', '=', '2011', ';']"
+Retrieve the employee with the lowest total pay.,SELECT * FROM Salaries ORDER BY TotalPay ASC LIMIT 1;,"
+SELECT EmployeeName, TotalPay
+FROM Salaries
+ORDER BY TotalPay ASC
+LIMIT 1;","['SELECT', '*', 'FROM', 'Salaries', 'ORDER', 'BY', 'TotalPay', 'ASC', 'LIMIT', '1', ';']","['SELECT', 'EmployeeName', ',', 'TotalPay', 'FROM', 'Salaries', 'ORDER', 'BY', 'TotalPay', 'ASC', 'LIMIT', '1', ';']"
+Retrieve the employee with the highest other pay.,SELECT * FROM Salaries ORDER BY OtherPay DESC LIMIT 1;,"
+SELECT EmployeeName, OtherPay FROM Salaries ORDER BY OtherPay DESC LIMIT 1;","['SELECT', '*', 'FROM', 'Salaries', 'ORDER', 'BY', 'OtherPay', 'DESC', 'LIMIT', '1', ';']","['SELECT', 'EmployeeName', ',', 'OtherPay', 'FROM', 'Salaries', 'ORDER', 'BY', 'OtherPay', 'DESC', 'LIMIT', '1', ';']"
+"Retrieve the total pay for employees with a base pay less than 50,000.",SELECT SUM(TotalPay) FROM Salaries WHERE BasePay < 50000;,"
+SELECT TotalPay FROM Salaries WHERE BasePay < 50000;","['SELECT', 'SUM', '(', 'TotalPay', ')', 'FROM', 'Salaries', 'WHERE', 'BasePay', '<', '50000', ';']","['SELECT', 'TotalPay', 'FROM', 'Salaries', 'WHERE', 'BasePay', '<', '50000', ';']"
+Retrieve the employee with the highest benefits.,SELECT * FROM Salaries ORDER BY Benefits DESC LIMIT 1;,"
+SELECT EmployeeName, Max(Benefits) as Highest_Benefits FROM Salaries GROUP BY EmployeeName;
+
+SELECT EmployeeName, Benefits FROM Salaries WHERE Benefits = (SELECT Max(Benefits) as Highest_Benefits FROM Salaries GROUP BY EmployeeName);","['SELECT', '*', 'FROM', 'Salaries', 'ORDER', 'BY', 'Benefits', 'DESC', 'LIMIT', '1', ';']","['SELECT', 'EmployeeName', ',', 'Max', '(', 'Benefits', ')', 'as', 'Highest_Benefits', 'FROM', 'Salaries', 'GROUP', 'BY', 'EmployeeName', ';', 'SELECT', 'EmployeeName', ',', 'Benefits', 'FROM', 'Salaries', 'WHERE', 'Benefits', '=', '(', 'SELECT', 'Max', '(', 'Benefits', ')', 'as', 'Highest_Benefits', 'FROM', 'Salaries', 'GROUP', 'BY', 'EmployeeName', ')', ';']"
+Retrieve the employee with the lowest benefits.,SELECT * FROM Salaries ORDER BY Benefits ASC LIMIT 1;,"
+SELECT EmployeeName, Benefits FROM Salaries ORDER BY Benefits ASC LIMIT 1;","['SELECT', '*', 'FROM', 'Salaries', 'ORDER', 'BY', 'Benefits', 'ASC', 'LIMIT', '1', ';']","['SELECT', 'EmployeeName', ',', 'Benefits', 'FROM', 'Salaries', 'ORDER', 'BY', 'Benefits', 'ASC', 'LIMIT', '1', ';']"
+Retrieve the employee with the highest base pay.,SELECT * FROM Salaries ORDER BY BasePay DESC LIMIT 1;,"
+SELECT EmployeeName, BasePay FROM Salaries ORDER BY BasePay DESC LIMIT 1;","['SELECT', '*', 'FROM', 'Salaries', 'ORDER', 'BY', 'BasePay', 'DESC', 'LIMIT', '1', ';']","['SELECT', 'EmployeeName', ',', 'BasePay', 'FROM', 'Salaries', 'ORDER', 'BY', 'BasePay', 'DESC', 'LIMIT', '1', ';']"
+"Retrieve the total number of employees with a base pay less than 25,000.",SELECT COUNT(*) FROM Salaries WHERE BasePay < 25000;,"
+SELECT COUNT(Id) FROM Salaries WHERE BasePay < 25000;","['SELECT', 'COUNT', '(', '*', ')', 'FROM', 'Salaries', 'WHERE', 'BasePay', '<', '25000', ';']","['SELECT', 'COUNT', '(', 'Id', ')', 'FROM', 'Salaries', 'WHERE', 'BasePay', '<', '25000', ';']"
+"Retrieve the total number of employees with a base pay less than 30,000.",SELECT COUNT(*) FROM Salaries WHERE BasePay < 30000;,"
+SELECT COUNT(Id) FROM Salaries WHERE BasePay < 30000;","['SELECT', 'COUNT', '(', '*', ')', 'FROM', 'Salaries', 'WHERE', 'BasePay', '<', '30000', ';']","['SELECT', 'COUNT', '(', 'Id', ')', 'FROM', 'Salaries', 'WHERE', 'BasePay', '<', '30000', ';']"
+Retrieve the total pay for employees with a job title containing the word 'DIRECTOR' and a year equal to 2015.,SELECT SUM(TotalPay) FROM Salaries WHERE JobTitle LIKE '%DIRECTOR%' AND Year = 2015;,"
+SELECT TotalPay FROM Salaries WHERE JobTitle LIKE '%DIRECTOR%' AND Year = 2015;","['SELECT', 'SUM', '(', 'TotalPay', ')', 'FROM', 'Salaries', 'WHERE', 'JobTitle', 'LIKE', ""'"", '%', 'DIRECTOR', '%', ""'"", 'AND', 'Year', '=', '2015', ';']","['SELECT', 'TotalPay', 'FROM', 'Salaries', 'WHERE', 'JobTitle', 'LIKE', ""'"", '%', 'DIRECTOR', '%', ""'"", 'AND', 'Year', '=', '2015', ';']"
+Retrieve the total number of employees with a year equal to 2016.,SELECT COUNT(*) FROM Salaries WHERE Year = 2016;,"
+SELECT COUNT(Id) FROM Salaries WHERE Year = 2016;","['SELECT', 'COUNT', '(', '*', ')', 'FROM', 'Salaries', 'WHERE', 'Year', '=', '2016', ';']","['SELECT', 'COUNT', '(', 'Id', ')', 'FROM', 'Salaries', 'WHERE', 'Year', '=', '2016', ';']"
+Retrieve the total pay for employees with a job title of 'DEPUTY DIRECTOR OF INVESTMENTS' and a year equal to 2017.,SELECT SUM(TotalPay) FROM Salaries WHERE JobTitle = 'DEPUTY DIRECTOR OF INVESTMENTS' AND Year = 2017;,"
+SELECT TotalPay FROM Salaries WHERE JobTitle = 'DEPUTY DIRECTOR OF INVESTMENTS' AND Year = 2017;","['SELECT', 'SUM', '(', 'TotalPay', ')', 'FROM', 'Salaries', 'WHERE', 'JobTitle', '=', ""'"", 'DEPUTY', 'DIRECTOR', 'OF', 'INVESTMENTS', ""'"", 'AND', 'Year', '=', '2017', ';']","['SELECT', 'TotalPay', 'FROM', 'Salaries', 'WHERE', 'JobTitle', '=', ""'"", 'DEPUTY', 'DIRECTOR', 'OF', 'INVESTMENTS', ""'"", 'AND', 'Year', '=', '2017', ';']"
+Retrieve the total pay for employees with a job title of 'DEPUTY DIRECTOR OF INVESTMENTS' and a year equal to 2021.,SELECT SUM(TotalPay) FROM Salaries WHERE JobTitle = 'DEPUTY DIRECTOR OF INVESTMENTS' AND Year = 2021;,"
+SELECT TotalPay FROM Salaries WHERE JobTitle = 'DEPUTY DIRECTOR OF INVESTMENTS' AND Year = 2021;","['SELECT', 'SUM', '(', 'TotalPay', ')', 'FROM', 'Salaries', 'WHERE', 'JobTitle', '=', ""'"", 'DEPUTY', 'DIRECTOR', 'OF', 'INVESTMENTS', ""'"", 'AND', 'Year', '=', '2021', ';']","['SELECT', 'TotalPay', 'FROM', 'Salaries', 'WHERE', 'JobTitle', '=', ""'"", 'DEPUTY', 'DIRECTOR', 'OF', 'INVESTMENTS', ""'"", 'AND', 'Year', '=', '2021', ';']"
+Retrieve the total number of employees with a year equal to 2022.,SELECT COUNT(*) FROM Salaries WHERE Year = 2022;,"
+SELECT COUNT(Id) FROM Salaries WHERE Year = 2022;","['SELECT', 'COUNT', '(', '*', ')', 'FROM', 'Salaries', 'WHERE', 'Year', '=', '2022', ';']","['SELECT', 'COUNT', '(', 'Id', ')', 'FROM', 'Salaries', 'WHERE', 'Year', '=', '2022', ';']"
+Retrieve the total number of employees with a year equal to 2023.,SELECT COUNT(*) FROM Salaries WHERE Year = 2023;,"
+SELECT COUNT(Id) FROM Salaries WHERE Year = 2023;","['SELECT', 'COUNT', '(', '*', ')', 'FROM', 'Salaries', 'WHERE', 'Year', '=', '2023', ';']","['SELECT', 'COUNT', '(', 'Id', ')', 'FROM', 'Salaries', 'WHERE', 'Year', '=', '2023', ';']"
+"Retrieve the total number of employees with a base pay less than 50,000 and a year equal to 2016.",SELECT COUNT(*) FROM Salaries WHERE BasePay < 50000 AND Year = 2016;,"
+SELECT COUNT(Id) FROM Salaries WHERE BasePay < 50000 AND Year = 2016;","['SELECT', 'COUNT', '(', '*', ')', 'FROM', 'Salaries', 'WHERE', 'BasePay', '<', '50000', 'AND', 'Year', '=', '2016', ';']","['SELECT', 'COUNT', '(', 'Id', ')', 'FROM', 'Salaries', 'WHERE', 'BasePay', '<', '50000', 'AND', 'Year', '=', '2016', ';']"
+Retrieve the total number of employees with a year equal to 2027.,SELECT COUNT(*) FROM Salaries WHERE Year = 2027;,"
+SELECT COUNT(Id) FROM Salaries WHERE Year = 2027;","['SELECT', 'COUNT', '(', '*', ')', 'FROM', 'Salaries', 'WHERE', 'Year', '=', '2027', ';']","['SELECT', 'COUNT', '(', 'Id', ')', 'FROM', 'Salaries', 'WHERE', 'Year', '=', '2027', ';']"
+Retrieve the total pay for employees with a job title starting with the letter 'T' and a year equal to 2029.,SELECT SUM(TotalPay) FROM Salaries WHERE JobTitle LIKE 'T%' AND Year = 2029;,"
+SELECT TotalPay FROM Salaries WHERE JobTitle LIKE 'T%' AND Year = 2029;","['SELECT', 'SUM', '(', 'TotalPay', ')', 'FROM', 'Salaries', 'WHERE', 'JobTitle', 'LIKE', ""'"", 'T', '%', ""'"", 'AND', 'Year', '=', '2029', ';']","['SELECT', 'TotalPay', 'FROM', 'Salaries', 'WHERE', 'JobTitle', 'LIKE', ""'"", 'T', '%', ""'"", 'AND', 'Year', '=', '2029', ';']"

@@ -1,0 +1,32 @@
+question,golden_query,capybarahermes_generated_query,golden_tokens,mistral_tokens
+Retrieve the employee with the highest total pay.,SELECT * FROM Salaries ORDER BY TotalPay DESC LIMIT 1;,"
+SELECT EmployeeName, MAX(TotalPay) as Highest_Total_Pay
+FROM Salaries
+GROUP BY EmployeeName
+ORDER BY Highest_Total_Pay DESC
+LIMIT 1;","['SELECT', '*', 'FROM', 'Salaries', 'ORDER', 'BY', 'TotalPay', 'DESC', 'LIMIT', '1', ';']","['SELECT', 'EmployeeName', ',', 'TotalPay', 'FROM', 'Salaries', 'ORDER', 'BY', 'TotalPay', 'DESC', 'FETCH', 'FIRST', '1', 'ROWS', 'ONLY', ';']"
+Retrieve the average base pay for all employees.,SELECT AVG(BasePay) AS AverageBasePay FROM Salaries;,"
+SELECT AVG(BasePay) FROM Salaries;","['SELECT', 'AVG', '(', 'BasePay', ')', 'AS', 'AverageBasePay', 'FROM', 'Salaries', ';']","['SELECT', 'AVG', '(', 'BasePay', ')', 'FROM', 'Salaries', ';']"
+Retrieve the top 10 highest paid employees.,SELECT * FROM Salaries ORDER BY TotalPay DESC LIMIT 10;,"
+SELECT TOP 10 EmployeeName, TotalPayBenefits FROM Salaries ORDER BY TotalPayBenefits DESC;","['SELECT', '*', 'FROM', 'Salaries', 'ORDER', 'BY', 'TotalPay', 'DESC', 'LIMIT', '10', ';']","['SELECT', 'TOP', '10', 'Id', ',', 'EmployeeName', ',', 'JobTitle', ',', 'BasePay', ',', 'OvertimePay', ',', 'OtherPay', ',', 'TotalPay', ',', 'TotalPayBenefits', 'FROM', 'Salaries', 'ORDER', 'BY', 'TotalPay', 'DESC', ';']"
+Retrieve the employee with the highest overtime pay.,SELECT * FROM Salaries ORDER BY OvertimePay DESC LIMIT 1;,"
+SELECT EmployeeName, Max(OvertimePay) as OvertimePay
+FROM Salaries
+GROUP BY EmployeeName
+ORDER BY OvertimePay DESC
+LIMIT 1;","['SELECT', '*', 'FROM', 'Salaries', 'ORDER', 'BY', 'OvertimePay', 'DESC', 'LIMIT', '1', ';']","['SELECT', 'EmployeeName', ',', 'JobTitle', ',', 'BasePay', ',', 'OvertimePay', ',', 'OtherPay', ',', 'Benefits', ',', 'TotalPay', ',', 'TotalPayBenefits', ',', 'Year', ',', 'Notes', ',', 'Agency', ',', 'Status', 'FROM', 'Salaries', 'WHERE', 'OvertimePay', '=', '(', 'SELECT', 'MAX', '(', 'OvertimePay', ')', 'FROM', 'Salaries', ')', ';']"
+Retrieve the employee with the lowest total pay.,SELECT * FROM Salaries ORDER BY TotalPay ASC LIMIT 1;,"
+SELECT EmployeeName, TotalPay
+FROM Salaries
+ORDER BY TotalPay ASC
+LIMIT 1;","['SELECT', '*', 'FROM', 'Salaries', 'ORDER', 'BY', 'TotalPay', 'ASC', 'LIMIT', '1', ';']","['SELECT', 'Id', ',', 'EmployeeName', ',', 'JobTitle', ',', 'MIN', '(', 'TotalPay', ')', 'as', 'Lowest_TotalPay', 'FROM', 'Salaries', 'GROUP', 'BY', 'Id', ',', 'EmployeeName', ',', 'JobTitle', ';']"
+Retrieve the employee with the highest other pay.,SELECT * FROM Salaries ORDER BY OtherPay DESC LIMIT 1;,"
+SELECT EmployeeName, OtherPay FROM Salaries ORDER BY OtherPay DESC LIMIT 1;","['SELECT', '*', 'FROM', 'Salaries', 'ORDER', 'BY', 'OtherPay', 'DESC', 'LIMIT', '1', ';']","['SELECT', 'EmployeeName', ',', 'OtherPay', 'FROM', 'Salaries', 'ORDER', 'BY', 'OtherPay', 'DESC', 'FETCH', 'FIRST', '1', 'ROW', 'ONLY', ';']"
+Retrieve the employee with the highest benefits.,SELECT * FROM Salaries ORDER BY Benefits DESC LIMIT 1;,"
+SELECT EmployeeName, Max(Benefits) as Highest_Benefits FROM Salaries GROUP BY EmployeeName;
+
+SELECT EmployeeName, Benefits FROM Salaries WHERE Benefits = (SELECT Max(Benefits) as Highest_Benefits FROM Salaries GROUP BY EmployeeName);","['SELECT', '*', 'FROM', 'Salaries', 'ORDER', 'BY', 'Benefits', 'DESC', 'LIMIT', '1', ';']","['SELECT', 'EmployeeName', ',', 'SUM', '(', 'Benefits', ')', 'as', 'TotalBenefits', 'FROM', 'Salaries', 'GROUP', 'BY', 'EmployeeName', 'ORDER', 'BY', 'TotalBenefits', 'DESC', 'LIMIT', '1', ';']"
+Retrieve the employee with the lowest benefits.,SELECT * FROM Salaries ORDER BY Benefits ASC LIMIT 1;,"
+SELECT EmployeeName, Benefits FROM Salaries ORDER BY Benefits ASC LIMIT 1;","['SELECT', '*', 'FROM', 'Salaries', 'ORDER', 'BY', 'Benefits', 'ASC', 'LIMIT', '1', ';']","['SELECT', 'EmployeeName', ',', 'MIN', '(', 'Benefits', ')', 'as', 'LowestBenefits', 'FROM', 'Salaries', 'GROUP', 'BY', 'EmployeeName', ';']"
+Retrieve the employee with the highest base pay.,SELECT * FROM Salaries ORDER BY BasePay DESC LIMIT 1;,"
+SELECT EmployeeName, BasePay FROM Salaries ORDER BY BasePay DESC LIMIT 1;","['SELECT', '*', 'FROM', 'Salaries', 'ORDER', 'BY', 'BasePay', 'DESC', 'LIMIT', '1', ';']","['SELECT', 'EmployeeName', ',', 'JobTitle', ',', 'BasePay', 'FROM', 'Salaries', 'ORDER', 'BY', 'BasePay', 'DESC', 'FETCH', 'FIRST', '1', 'ROWS', 'ONLY', ';']"
