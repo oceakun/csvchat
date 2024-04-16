@@ -1,0 +1,92 @@
+#SignInContainer {
+  margin-top: 5px;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+#SignInContainer h3 {
+  color: rgba(247, 205, 166, 0.7);
+  font-size:20px;
+  font-weight: lighter;
+}
+
+.SignInInputFieldContainer p {
+  font-weight: 500;
+  font-size: 14px;
+  height: 28px;
+  line-height: 28px;
+  margin-right: 4px;
+  border-radius: 4px;
+  border: medium none;
+  color: rgb(204, 204, 220);
+  padding: 0rem 0rem;
+  margin-bottom:-0.3rem;
+}
+
+.SignInInputFieldContainer input[type="email"] {
+  background-color: #111217;
+  background-image: none;
+  border: 1px solid #ccccdc26;
+  border-radius: 2px;
+  color: #ccccdc;
+  width: 300px;
+  height: 31px;
+}
+
+.SignInInputFieldContainer input[type="password"] {
+  background-color: #111217;
+  background-image: none;
+  border: 1px solid #ccccdc26;
+  border-radius: 2px;
+  color: #ccccdc;
+  width: 300px;
+  height: 31px;
+}
+
+#SignInButtonContainer button {
+  background-color: #445fe4;
+  border: 1px solid #ccccdc26;
+  border-radius: 4px;
+  display: inline-block;
+  color: #ebebf3;
+  width: 300px;
+  height: 31px;
+  margin-top: 1rem;
+  font-weight: bolder;
+  opacity: 0.9;
+}
+
+#SignInButtonContainer button:hover {
+  opacity: 1;
+  cursor:pointer;
+}
+
+.DuplicateEmailWarningContainerNotDisplayed {
+  display: none;
+}
+
+.DuplicateEmailWarningContainerDisplayed p {
+  background: -webkit-linear-gradient(45deg, #f2aecc, #f2aeae, #c97777);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.IncorrectPasswordWarningContainerNotDisplayed {
+  display: none;
+}
+
+.IncorrectPasswordWarningContainerDisplayed p {
+  background: -webkit-linear-gradient(45deg, #f2aecc, #f2aeae, #c97777);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.passwordAndEmailNotMatchWarningContainerNotDisplayed {
+  display: none;
+}
+
+.passwordAndEmailNotMatchWarningContainerDisplayed p {
+  color: red;
+}

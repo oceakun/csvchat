@@ -1,0 +1,447 @@
+---
+import UserStoredFiles from "../components/userSpecificAssets/UserStoredFiles";
+import gitImage from "../assets/git.svg";
+import signinImage from "../assets/signin.svg";
+import arrowRight from "../assets/arrowRight.svg";
+import infoImage from "../assets/info.svg";
+import AuthenticatedUserEmailContainer from "../components/authenticatedUserEmailContainer/AuthenticatedUserEmailContainer";
+import SaveButton from "../components/saveButton/SaveButton";
+import "../styles/index.css";
+import SignIn from "../components/signIn/SignIn";
+import SignUp from "../components/signUp/SignUp";
+import InstructionsContainer from "../components/instructionsContainer/InstructionsContainer";
+import Conversation from "../components/chats/Conversation";
+---
+
+<div id="csv-visualizer">
+  <div class="primaryHalf">
+    <div class="header">
+      <span id="title">
+        <span id="appName">csv-visualizer</span>
+        <span id="appNameSubText"
+          >| powered by <mark id="libName"> Open LLMs</mark>
+        </span>
+        <span>
+          <AuthenticatedUserEmailContainer client:only />
+        </span>
+      </span>
+
+      <span class="headerOptions">
+        <div class="tooltip">
+          <img id="signinImage" src={signinImage} width="20" alt="SignIn" />
+          <span class="tooltiptext">Sign In</span>
+        </div>
+
+        <a
+          id="gitUrl"
+          style="display:none"
+          target="_blank"
+          href="https://github.com/oceakun/csv-visualizer"></a>
+        <div class="tooltip">
+          <img id="gitImage" src={gitImage} width="20" alt="Git" />
+          <span class="tooltiptext">Github repo</span>
+        </div>
+
+        <div class="tooltip">
+          <img
+            id="instructionsImage"
+            src={infoImage}
+            width="20"
+            alt="Instructions"
+          />
+          <span class="tooltiptext">Help</span>
+        </div>
+      </span>
+    </div>
+
+    <div id="actionbuttons">
+      <button id="myUploadBtn"> + File</button>
+      <!-- <img id="arrowRight" src={arrowRight} width="10" alt="Git" />
+      <SaveButton client:only /> -->
+    </div>
+  </div>
+
+  <div class="">
+    <UserStoredFiles client:only />
+  </div>
+
+
+  <div class="chatInterface">
+    <Conversation client:only/>
+  </div>
+<!-- 
+  <div
+    class="secondaryHalf"
+    style="padding-bottom:56.25%; position:relative; display:block; width: 100%"
+  >
+    <IframeContainer client:only />
+  </div> -->
+
+  <div id="uploadModal" class="modal">
+    <p class="closeUploadFileSpan">X</p>
+    <div id="uploadFileModalContent">
+      <button id="fileSelect">Browse</button>
+      <div id="uploadedFileDetailsContainer"></div>
+      <form
+        id="fileForm"
+        action="http://localhost:8080/api/upload"
+        method="post"
+      >
+        <input
+          type="file"
+          id="fileElem"
+          name="file"
+          accept=".csv"
+          style="display:none"
+        />
+        <button type="submit" id="formSubmitButton">Submit</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="authModal" class="modal">
+    <p class="closeAuthSpan">X</p>
+    <div id="authModalContent">
+      <SignIn client:only />
+      <button id="registerButton">New here? Sign up</button>
+    </div>
+  </div>
+
+  <div id="registerModal" class="modal">
+    <p class="closeRegisterSpan">X</p>
+    <div id="registerModalContent">
+      <SignUp client:only />
+    </div>
+  </div>
+
+  <div id="instructionsModal" class="modal">
+    <p class="closeInstructionsSpan">X</p>
+    <div id="instructionsModalContent">
+      <InstructionsContainer client:only />
+    </div>
+  </div>
+
+
+  <script>
+    import axios from "axios";
+    import { auth } from "../firebase";
+    import { onAuthStateChanged } from "firebase/auth";
+    import { currentUserUid, userEmail } from "../store/UserStore";
+    import {
+      userSpecificAssetsDisplayStatus,
+      selectedFileContentDisplayStatus,
+      saveButtonDisplayStatus,
+    } from "../store/ComponentsDisplayPropertyStore";
+    import { newPanelID } from "../store/GrafanaDashboardStore";
+    import createNewDataSource from "../grafanaAPICalls/createDataSource";
+    import updateDashboard from "../grafanaAPICalls/updateGrafanaDashboard";
+    import getDashboard from "../grafanaAPICalls/getCurrentPanelsArray";
+    import { useStore } from "@nanostores/react";
+
+    // const $newPanelID = useStore(newPanelID);
+    // const panelBaseurl = import.meta.env.PUBLIC_SOLO_PANEL_URL;
+    // const currentPanelLink = panelBaseurl + $newPanelID;
+
+    const panelBaseurl = import.meta.env.PUBLIC_SOLO_PANEL_URL;
+
+    const signinImage = document.getElementById("signinImage");
+    const registerButton = document.getElementById("registerButton");
+    const gitImage = document.getElementById("gitImage");
+    const instructionsImage = document.getElementById("instructionsImage");
+    const gitUrl = document.getElementById("gitUrl");
+    const form = document.querySelector("form");
+    const authModal = document.getElementById("authModal");
+    const queryModal = document.getElementById("queryModal");
+    const registerModal = document.getElementById("registerModal");
+    const fileUploadModal = document.getElementById("uploadModal");
+    const instructionsModal = document.getElementById("instructionsModal");
+    const myUploadBtn = document.getElementById("myUploadBtn");
+    const uploadedFilesDetails = document.getElementById(
+      "uploadedFileDetailsContainer"
+    );
+    const fileElem = document.getElementById("fileElem");
+    const fileSelect = document?.getElementById("fileSelect");
+    const closeUploadFileSpan = document.getElementsByClassName(
+      "closeUploadFileSpan"
+    )[0];
+    const uploadFileModalContent = document.getElementById("uploadFileModalContent");
+    const closeAuthSpan = document.getElementsByClassName("closeAuthSpan")[0];
+    const closeRegisterSpan =
+      document.getElementsByClassName("closeRegisterSpan")[0];
+    const closeInstructionsSpan = document.getElementsByClassName(
+      "closeInstructionsSpan"
+    )[0];
+
+    // event listener for the form submission
+    if (form) {
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const url = import.meta.env.PUBLIC_FILE_UPLOAD_URL;
+        axios
+          .post(url, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((res) => {
+            console.log("file upload was successful, response : ", res);
+            localStorage.setItem("tableName", res.data.table_name);
+            localStorage.setItem("columnNames", JSON.stringify(res.data.column_names));
+            })
+          .catch((err) => {
+            console.log("there was an error in file upload : ", err);
+          });
+          
+      });
+    }
+
+    // update user info when auth state changes
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUserUid.set(user.uid);
+        userEmail.set(user.email);
+        userSpecificAssetsDisplayStatus.set("userSpecificAssetsDisplayed");
+        saveButtonDisplayStatus.set("saveButtonDisplayed");
+        selectedFileContentDisplayStatus.set("selectedFileContentDisplayed");
+        console.log("onAuthStateChanged, user exists: ", user);
+        console.log("currentUserUid.get() : ", currentUserUid.get());
+        console.log("userEmail.get() : ", userEmail.get());
+        console.log(
+          "userSpecificAssetsDisplayStatus.get() : ",
+          userSpecificAssetsDisplayStatus.get()
+        );
+      } else {
+        console.log("onAuthStateChanged, no user signed in ");
+        currentUserUid.set("");
+        userEmail.set("");
+        userSpecificAssetsDisplayStatus.set("userSpecificAssetsNotDisplayed");
+        saveButtonDisplayStatus.set("saveButtonNotDisplayed");
+        selectedFileContentDisplayStatus.set("selectedFileContentNotDisplayed");
+      }
+    });
+
+    // git image clicked, click gitUrl anchor tag
+    gitImage.onclick = function () {
+      // navigate to the git repo
+      gitUrl?.click();
+    };
+
+    // When the user clicks anywhere outside of the fileUploadModal, close it
+    window.onclick = function (event) {
+      if (event.target == fileUploadModal) {
+        window.localStorage.setItem("fileUploadModal", JSON.stringify("none"));
+        fileUploadModal.style.display = JSON.parse(
+          window.localStorage.getItem("fileUploadModal") || "{}"
+        );
+      }
+      if (event.target == authModal) {
+        window.localStorage.setItem("authModal", JSON.stringify("none"));
+        authModal.style.display = JSON.parse(
+          window.localStorage.getItem("authModal") || "{}"
+        );
+      }
+      if (event.target == registerModal) {
+        window.localStorage.setItem("registerModal", JSON.stringify("none"));
+        registerModal.style.display = JSON.parse(
+          window.localStorage.getItem("registerModal") || "{}"
+        );
+      }
+      if (event.target == instructionsModal) {
+        window.localStorage.setItem(
+          "instructionsModal",
+          JSON.stringify("none")
+        );
+        instructionsModal.style.display = JSON.parse(
+          window.localStorage.getItem("instructionsModal") || "{}"
+        );
+      }
+    };
+
+    // --------------------------------------------------------------------------------------------
+
+    // 'Upload' button clicked, open the file upload modal
+    myUploadBtn.onclick = function () {
+      window.localStorage.setItem("fileUploadModal", JSON.stringify("block"));
+      fileUploadModal.style.display = JSON.parse(
+        window.localStorage.getItem("fileUploadModal") || "{}"
+      );
+      fileUploadModal.style.flexFlow = "row nowrap";
+      fileUploadModal.style.justifyContent = "center";
+      fileUploadModal.style.alignItems = "center";
+    };
+
+    // When the user clicks on <span> (x), close the fileUploadModal
+    closeUploadFileSpan.onclick = function () {
+      window.localStorage.setItem("fileUploadModal", JSON.stringify("none"));
+      fileUploadModal.style.display = JSON.parse(
+        window.localStorage.getItem("fileUploadModal") || "{}"
+      );
+    };
+
+    fileUploadModal.style.display = JSON.parse(
+      window.localStorage.getItem("fileUploadModal") || "{}"
+    );
+
+    // --------------------------------------------------------------------------------------------
+
+    // 'signinImage' image clicked, open the authModal
+    signinImage.onclick = function () {
+      window.localStorage.setItem("authModal", JSON.stringify("block"));
+      authModal.style.display = JSON.parse(
+        window.localStorage.getItem("authModal") || "{}"
+      );
+      authModal.style.flexFlow = "row nowrap";
+      authModal.style.justifyContent = "center";
+      authModal.style.alignItems = "center";
+    };
+
+    // When the user clicks on <span> (x), close the authModal
+    closeAuthSpan.onclick = function () {
+      window.localStorage.setItem("authModal", JSON.stringify("none"));
+      authModal.style.display = JSON.parse(
+        window.localStorage.getItem("authModal") || "{}"
+      );
+    };
+
+    authModal.style.display = JSON.parse(
+      window.localStorage.getItem("authModal") || "{}"
+    );
+
+    // 'registerButton' image clicked, open the registerModal
+    registerButton.onclick = function () {
+      window.localStorage.setItem("registerModal", JSON.stringify("block"));
+      registerModal.style.display = JSON.parse(
+        window.localStorage.getItem("registerModal") || "{}"
+      );
+      registerModal.style.flexFlow = "row nowrap";
+      registerModal.style.justifyContent = "center";
+      registerModal.style.alignItems = "center";
+    };
+
+    // When the user clicks on <span> (x), close the registerModal
+    closeRegisterSpan.onclick = function () {
+      window.localStorage.setItem("registerModal", JSON.stringify("none"));
+      registerModal.style.display = JSON.parse(
+        window.localStorage.getItem("registerModal") || "{}"
+      );
+    };
+
+    registerModal.style.display = JSON.parse(
+      window.localStorage.getItem("registerModal") || "{}"
+    );
+
+    // --------------------------------------------------------------------------------------------
+
+    // 'instructionsButton' image clicked, open the registerModal
+    instructionsImage.onclick = function () {
+      window.localStorage.setItem("instructionsModal", JSON.stringify("block"));
+      instructionsModal.style.display = JSON.parse(
+        window.localStorage.getItem("instructionsModal") || "{}"
+      );
+      instructionsModal.style.flexFlow = "row nowrap";
+      instructionsModal.style.justifyContent = "center";
+      instructionsModal.style.alignItems = "center";
+    };
+
+    // When the user clicks on <span> (x), close the instructionsModal
+    closeInstructionsSpan.onclick = function () {
+      window.localStorage.setItem("instructionsModal", JSON.stringify("none"));
+      instructionsModal.style.display = JSON.parse(
+        window.localStorage.getItem("instructionsModal") || "{}"
+      );
+    };
+
+    instructionsModal.style.display = JSON.parse(
+      window.localStorage.getItem("instructionsModal") || "{}"
+    );
+
+    fileSelect?.addEventListener(
+      "click",
+      (e) => {
+        if (fileElem) {
+          fileElem.click();
+        }
+      },
+      false
+    );
+
+    const handleFileSelection = (files) => {
+      const selectedFile = files[0];
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const result = event.target.result;
+        const lines = result.split('\n'); // Split the file into lines
+        const columnNames = lines[0].split(',').map((columnName) => columnName.trim()); // Extract column names from the first line
+        console.log('Column names:', columnNames);
+        window.localStorage.setItem('columnNames', JSON.stringify(columnNames));
+      };
+
+      // Read the file as text
+      reader.readAsText(selectedFile);
+      const fileName = selectedFile.name;
+      const fileSize = selectedFile.size;
+      const fileLastModified = selectedFile.lastModified;
+      const fileType = selectedFile.type;      
+      window.localStorage.setItem("file", JSON.stringify(selectedFile));
+      window.localStorage.setItem("fileName", JSON.stringify(fileName));
+      window.localStorage.setItem("fileSize", JSON.stringify(fileSize));
+      window.localStorage.setItem("fileLastModified", JSON.stringify(fileLastModified));
+      window.localStorage.setItem("fileType", JSON.stringify(fileType));      
+      updateFileDetailsContainer();
+    };
+
+    // log the file uploaded via "fileElem"
+    if (fileElem) {
+      fileElem.onchange = () => {
+        const files = [...fileElem.files];
+        handleFileSelection(files);
+      };
+    }
+
+
+    // Event listener for drop on uploadFileModalContent
+    uploadFileModalContent.addEventListener("drop", (event) => {
+      event.preventDefault();
+      const files = event.dataTransfer.files;
+      handleFileSelection(files);
+    });
+
+    // Prevent default behavior for dragover event to enable drop
+    uploadFileModalContent.addEventListener("dragover", (event) => {
+      event.preventDefault();
+    });
+
+    const updateFileDetailsContainer = () => {
+      const fileName = JSON.parse(
+        window.localStorage.getItem("fileName") || "{}"
+      );
+      const fileSize = JSON.parse(
+        window.localStorage.getItem("fileSize") || "{}"
+      );
+      const fileLastModified = JSON.parse(
+        window.localStorage.getItem("fileLastModified") || "{}"
+      );
+      const fileType = JSON.parse(
+        window.localStorage.getItem("fileType") || "{}"
+      );
+
+      const innerHTMLContent = `
+		<span id="fileDetails">
+		<p id="fileDetailsHeader" style="color:rgba(247, 205, 166, 0.7);font-size:14px;text-align:center;font-style:italic">Uploaded</p>
+		<p id="fileName"> <mark style="background:transparent;color:rgb(124, 58, 237);font-size:16px;opacity:0.9">Name</mark> : <mark style="background:transparent;color:#f1f296;font-size:15px;opacity:0.7">${fileName}</mark></p>
+		<p id="fileSize"> <mark style="background:transparent;color:rgb(124, 58, 237);font-size:16px;opacity:0.9">Size</mark> : <mark style="background:transparent;color:#f1f296;font-size:15px;opacity:0.7">${fileSize}  KB</mark></p>
+		<p id="fileLastModified"><mark style="background:transparent;color:rgb(124, 58, 237);font-size:16px;opacity:0.9">Last Modified</mark> : <mark style="background:transparent;color:#f1f296;font-size:15px;opacity:0.7">${fileLastModified} epoch</mark></p>
+		<p id="fileType"> <mark style="background:transparent;color:rgb(124, 58, 237);font-size:16px;opacity:0.9">Type</mark> : <mark style="background:transparent;color:#f1f296;font-size:15px;opacity:0.7">${fileType}</mark></p>
+    
+		</span>
+		`;
+
+      if (uploadedFilesDetails) {
+        uploadedFilesDetails.innerHTML = innerHTMLContent;
+      }
+    };
+
+    updateFileDetailsContainer();
+  </script>
+</div>

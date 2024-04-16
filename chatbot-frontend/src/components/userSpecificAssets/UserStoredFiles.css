@@ -1,0 +1,123 @@
+.userSpecificAssetsDisplayed {
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.userSpecificAssetsNotDisplayed {
+  display: none;
+}
+
+.tableAndFileExplorer {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.styled-table {
+  font-size: 0.9em;
+  font-family: var(--font-mono), JetBrains Mono, ui-monospace, SFMono-Regular,
+    Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  border: 1px solid rgba(204, 204, 220, 0.07);
+  color: rgba(204, 204, 220, 0.65);
+  background-color: rgb(24, 27, 31);
+  padding: 2rem 2rem;
+  width:100%;
+}
+
+.styled-table thead tr {
+  text-align: left;
+}
+
+.styled-table tbody tr {
+  text-align: left;
+}
+
+.styled-table tbody tr:hover {
+  color: rgba(204, 204, 220, 0.95);
+  background-color: rgb(22, 24, 26);
+}
+
+#deleteDoc {
+  opacity: 0;
+}
+
+#copyLink {
+  opacity: 0;
+}
+
+#deleteDoc:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+
+#copyLink:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+
+.styled-table tbody tr:hover #deleteDoc {
+  opacity: 0.7;
+}
+
+.styled-table tbody tr:hover #copyLink {
+  opacity: 0.9;
+}
+
+.styled-table th {
+  border-bottom: 1px solid rgba(204, 204, 220, 0.07);
+  color: rgb(67, 220, 131);
+  padding: 12px 15px;
+  opacity: 0.7;
+}
+
+.styled-table td {
+  padding: 12px 15px;
+  opacity: 0.7;
+  border-right: 1px solid rgba(204, 204, 220, 0.07);
+
+}
+
+.selectedFileActionOptions img {
+  padding: 0 0 0 0.8rem;
+  opacity: 0.7;
+}
+
+.selectedFileActionOptions img:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.tooltip2 {
+  position: relative;
+}
+
+.tooltip2 .tooltiptext2 {
+  visibility: hidden;
+  width: 120px;
+  background-color: rgb(13, 13, 13);
+  color: #6cd8e9;
+  text-align: center;
+  border-radius: 4px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 120%;
+  left: 15%;
+  margin-left: -65px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 12px;
+}
+
+.tooltip2 .tooltiptext2::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+}
+
+.tooltip2:hover .tooltiptext2 {
+  visibility: visible;
+  opacity: 1;
+}
